@@ -253,10 +253,10 @@ const Profile = () => {
             {currentUser.avatar ? currentUser.avatar : <User className="h-8 w-8" />}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
               <div>
                 {isEditing ? (
-                  <div className="space-y-2 min-w-[220px]">
+                  <div className="space-y-2 w-full sm:min-w-[220px] sm:max-w-sm">
                     <input
                       value={editDraft.name}
                       onChange={(e) => setEditDraft((prev) => ({ ...prev, name: e.target.value }))}
@@ -278,7 +278,7 @@ const Profile = () => {
                 )}
               </div>
               {isOwnProfile && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-end gap-2 flex-wrap w-full sm:w-auto">
                   {isEditing ? (
                     <>
                       <button
@@ -323,13 +323,13 @@ const Profile = () => {
                   <input
                     value={editDraft.location}
                     onChange={(e) => setEditDraft((prev) => ({ ...prev, location: e.target.value }))}
-                    className="rounded-lg bg-background border border-border px-2 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full sm:w-auto rounded-lg bg-background border border-border px-2 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                     placeholder="Località"
                   />
                   <input
                     value={editDraft.website}
                     onChange={(e) => setEditDraft((prev) => ({ ...prev, website: e.target.value }))}
-                    className="rounded-lg bg-background border border-border px-2 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full sm:w-auto rounded-lg bg-background border border-border px-2 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                     placeholder="Sito web"
                   />
                 </>
@@ -374,7 +374,7 @@ const Profile = () => {
               initial={{ opacity: 0, y: 20, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.97 }}
-              className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[92vw] max-w-md rounded-2xl bg-card border border-border shadow-float"
+              className="fixed z-50 left-3 right-3 top-1/2 -translate-y-1/2 sm:left-1/2 sm:right-auto sm:w-[92vw] sm:max-w-md sm:-translate-x-1/2 rounded-2xl bg-card border border-border shadow-float"
             >
               <div className="p-4 border-b border-border flex items-center justify-between">
                 <h3 className="font-display text-lg font-semibold text-foreground">
@@ -387,9 +387,9 @@ const Profile = () => {
                   <Link key={friend.id} to={`/profile/${friend.id}`} onClick={() => setFollowersModal(null)} className="block rounded-xl bg-background border border-border p-3 hover:bg-secondary/40 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-secondary-foreground">{friend.avatar}</div>
-                      <div>
+                      <div className="min-w-0">
                         <p className="text-sm font-semibold text-foreground">{friend.name}</p>
-                        <p className="text-xs text-muted-foreground">{friend.bio}</p>
+                        <p className="text-xs text-muted-foreground truncate">{friend.bio}</p>
                       </div>
                     </div>
                   </Link>

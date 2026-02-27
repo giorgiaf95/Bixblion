@@ -261,11 +261,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Main content */}
-      <main className="pb-20 md:pb-8 flex-1">
+      <main className="pb-24 md:pb-8 flex-1">
         {children}
       </main>
 
-      <footer className="border-t border-border bg-card/60 backdrop-blur-sm">
+      <footer className="border-t border-border bg-card/60 backdrop-blur-sm mb-16 md:mb-0 pb-[env(safe-area-inset-bottom)]">
         <div className="container py-3 text-xs text-muted-foreground flex flex-col md:flex-row md:items-center md:justify-between gap-2">
           <span>© 2026 Bixblion</span>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
