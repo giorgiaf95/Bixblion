@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useSearchBooks } from '@/hooks/useOpenLibrary';
 import { openLibraryService } from '@/services/openLibrary';
+import { mapOpenLibraryToBook } from '@/lib/bookMapper';
 
 export function BookSearch() {
   const [query, setQuery] = useState('');
