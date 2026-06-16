@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
-import { Search, Sparkles, Users, Trophy, Megaphone, Clock3 } from "lucide-react";
+import { Search, Sparkles, Users, Trophy, Megaphone, Clock3, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { BookCard } from "@/components/BookCard";
 import { allGenres, mockBooks } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { useSearchBooks } from "@/hooks/useOpenLibrary";
+import { mapOpenLibraryToBook } from "@/lib/bookMapper";
 
 const bannerItems = [
   { id: "b1", title: "Concorso attivo", text: "Partecipa al contest 'Recensione Perfetta'", icon: Megaphone, action: "Scopri" },
@@ -18,6 +20,7 @@ const Explore = () => {
   const [selectedGenre, setSelectedGenre] = useState("Tutti");
 
   const query = searchQuery.trim().toLowerCase();
+  const { data: openLibraryResults, isLoading } = useSearchBooks(query);
 
   const bixblionRecommended = useMemo(() => {
     return mockBooks
@@ -31,15 +34,27 @@ const Explore = () => {
       .slice(0, 6);
   }, []);
 
+  // Combina risultati locali + Open Library
   const genreResults = useMemo(() => {
-    return mockBooks.filter((book) => {
+    let results = [...mockBooks];
+
+    // Aggiungi risultati da Open Library se disponibili
+    if (query.length > 2 && openLibraryResults?.docs) {
+      const openLibraryBooks = openLibraryResults.docs
+        .slice(0, 5)
+        .map(mapOpenLibraryToBook);
+      results = [...results, ...openLibraryBooks];
+    }
+
+    // Filtra per ricerca e genere
+    return results.filter((book) => {
       const matchesText = query.length === 0
         || book.title.toLowerCase().includes(query)
         || book.author.toLowerCase().includes(query);
       const matchesGenre = selectedGenre === "Tutti" || book.genre.includes(selectedGenre);
       return matchesText && matchesGenre;
     }).slice(0, 8);
-  }, [query, selectedGenre]);
+  }, [query, selectedGenre, openLibraryResults]);
 
   return (
     <div className="container py-6 md:py-10 space-y-6 max-w-6xl">
@@ -51,6 +66,9 @@ const Explore = () => {
       <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-3">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          {isLoading && query.length > 2 && (
+            <Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary animate-spin" />
+          )}
           <input
             type="text"
             placeholder="Cerca libri o autori..."
@@ -106,7 +124,12 @@ const Explore = () => {
           </section>
 
           <section className="rounded-xl bg-card border border-border p-4 shadow-card">
-            <h3 className="font-display text-lg font-semibold text-foreground mb-3">Risultati per genere</h3>
+            <h3 className="font-display text-lg font-semibold text-foreground mb-3">
+              Risultati per genere
+              {isLoading && query.length > 2 && (
+                <Loader2 className="inline h-4 w-4 ml-2 animate-spin text-primary" />
+              )}
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {genreResults.map((book) => (
                 <Link key={book.id} to={`/book/${book.id}`} className="rounded-lg bg-background border border-border p-2.5 hover:bg-secondary/50 transition-colors">
@@ -122,7 +145,7 @@ const Explore = () => {
               ))}
             </div>
 
-            {genreResults.length === 0 && (
+            {genreResults.length === 0 && !isLoading && (
               <p className="text-sm text-muted-foreground text-center py-6">Nessun libro trovato con i filtri attuali.</p>
             )}
           </section>
