@@ -17,6 +17,14 @@ export interface Book {
   language?: string;
   saga?: string;
   synopsis?: string;
+
+  openLibraryKey?: string;             // Es. /works/OL123456W
+  openLibraryCoverId?: number;         // ID della copertina
+  authorKey?: string;                  // Es. /authors/OL123A
+  alternativeTitles?: string[];        // Titoli alternativi
+  originalLanguage?: string;           // Lingua originale
+  subjects?: string[];                 // Soggetti/categorie
+  source?: 'manual' | 'openLibrary';   // Traccia la fonte
 }
 
 export interface ReviewComment {
