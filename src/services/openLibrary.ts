@@ -19,30 +19,18 @@ export interface OpenLibrarySearchResult {
 }
 
 export const openLibraryService = {
-  // Cerca libri per titolo/autore
   searchBooks: async (query: string, limit = 20): Promise<OpenLibrarySearchResult> => {
-    const response = await axios.get(`${OPEN_LIBRARY_API}/search.json`, {
-      params: {
-        q: query,
-        limit,
-      },
-    });
-    return response.data;
+    try {
+      const response = await axios.get(`${OPEN_LIBRARY_API}/search.json`, {
+        params: { q: query, limit },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Open Library search error:', error);
+      return { docs: [], numFound: 0 };
+    }
   },
 
-  // Recupera dettagli di un libro per ISBN
-  getByISBN: async (isbn: string) => {
-    const response = await axios.get(`${OPEN_LIBRARY_API}/books.json`, {
-      params: {
-        bibkeys: `ISBN:${isbn}`,
-        format: 'json',
-        jscmd: 'details',
-      },
-    });
-    return response.data;
-  },
-
-  // Ottieni copertina
   getCoverUrl: (coverId: number, size = 'M'): string => {
     return `https://covers.openlibrary.org/b/id/${coverId}-${size}.jpg`;
   },
